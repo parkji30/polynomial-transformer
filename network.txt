@@ -1,0 +1,21 @@
+Model: "transformer"
+__________________________________________________________________________________________________
+ Layer (type)                   Output Shape         Param #     Connected to
+==================================================================================================
+ encoder_inputs (InputLayer)    [(None, None)]       0           []
+
+ token_and_position_embedding (  (None, None, 256)   30464       ['encoder_inputs[0][0]']
+ TokenAndPositionEmbedding)
+
+ transformer_encoder (Transform  (None, None, 256)   527104      ['token_and_position_embedding[0]
+ erEncoder)                                                      [0]']
+
+ decoder_inputs (InputLayer)    [(None, None)]       0           []
+
+ transformer_encoder_1 (Transfo  (None, None, 256)   527104      ['transformer_encoder[0][0]']
+ rmerEncoder)
+
+ model_1 (Functional)           (None, None, 650)    2578058     ['decoder_inputs[0][0]',
+                                                                  'transformer_encoder_1[0][0]']
+
+==================================================================================================
