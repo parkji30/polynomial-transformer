@@ -26,3 +26,15 @@ python main.py
 ```
 
 To evaluate the results back on the train.txt file.
+
+
+**Note**
+I was able to achieve approximately 98% accuracy with a 3 layer Decoder / Encoder Transformer Model.
+Additional Hyperparameters are as:
+
+<ul>
+    <li>256 embed dim</li>
+    <li>512 intermediate dim</li>
+    <li>9 head multi attention layer</li>
+    <li>0.1% drop out rate for every layer</li>
+</ul>

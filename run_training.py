@@ -24,7 +24,7 @@ if __name__ == '__main__':
     # Our transformer seq2seq model has 3 Layers
     hyper_params_dict = {
         'BATCH_SIZE': 64,
-        'EPOCHS': 12,
+        'EPOCHS': 10,
         'MAX_SEQUENCE_LENGTH': 29,
         'FACTOR_VOCAB_SIZE': 90,
         'EXPANDED_VOCAB_SIZE': 650,
@@ -93,33 +93,32 @@ if __name__ == '__main__':
                                  save_best_only = True, 
                                  mode = 'min')
     callbacks_list = [early_stop, rlrp, checkpoint]
+
+    # Save Vocabulary into saved_models folder before training.
+    expand_vocab = expand_vectorization.get_vocabulary()
+    expand_index_lookup = dict(zip(range(len(expand_vocab)), expand_vocab))
+    
+    print("Dumping Vocabularies and Index as pickles.")
+    # Dump the lookup table into saved_models folder.
+    pickle.dump(expand_index_lookup, 
+                open(os.path.join(__location__, 'saved_models/expand_lookup_index.pickle'), 'wb'))
+    
+    # Dump the factor vectorizer into saved_models folder.
+    pickle.dump({'config': factor_vectorization.get_config(),
+                'weights': factor_vectorization.get_weights()}, 
+                open(os.path.join(__location__, "saved_models/factor_vectorization.pickle"), "wb"))
+
+    # Dump the expand vectorizer into saved_models folder.
+    pickle.dump({'config': expand_vectorization.get_config(),
+                'weights': expand_vectorization.get_weights()},
+                open(os.path.join(__location__, "saved_models/expand_vectorization.pickle"), "wb"))
     
     polynomial_transformer.compile("rmsprop", loss="sparse_categorical_crossentropy", metrics=["accuracy"])
     polynomial_transformer.fit(train_ds, epochs=hyper_params_dict['EPOCHS'], validation_data=val_ds, callbacks=callbacks_list)
     
     # Save Best Model into saved_models folder
     print("Saving Best Model.")
-    polynomial_transformer.save(os.path.join(__location__, "saved_model/best_model.h5"))
-    polynomial_transformer.save_weights(os.path.join(__location__, "saved_model/best_weights.h5"))
-    
-    # # Save Vocabulary into saved_models folder
-    expand_vocab = expand_vectorization.get_vocabulary()
-    expand_index_lookup = dict(zip(range(len(expand_vocab)), expand_vocab))
-    
-    
-    print("Dumping Vocabularies and Index as pickles.")
-    # Dump the lookup table into saved_models folder
-    pickle.dump(expand_index_lookup, 
-                open(os.path.join(__location__, 'saved_model/expand_lookup_index.pickle'), 'wb'))
-    
-    # Dump the factor vectorizer into saved_models folder
-    pickle.dump({'config': factor_vectorization.get_config(),
-                'weights': factor_vectorization.get_weights()}, 
-                open(os.path.join(__location__, "saved_model/factor_vectorization.pickle"), "wb"))
-
-    # Dump the expand vectorizer into saved_models folder
-    pickle.dump({'config': expand_vectorization.get_config(),
-                'weights': expand_vectorization.get_weights()},
-                open(os.path.join(__location__, "saved_model/expand_vectorization.pickle"), "wb"))
+    polynomial_transformer.save(os.path.join(__location__, "best_model/best_model.h5"))
+    polynomial_transformer.save_weights(os.path.join(__location__, "best_model/best_weights.h5"))
     
     print("Training completed. Files saved in saved_models folder.")

@@ -116,7 +116,7 @@ def main(filepath: str):
     # Loads a pretrained model to do the Guessing. 
     # This model Achieved ~ 97% when I ran it on train.txt
     polynomial_transformer = load_model(os.path.join(__location__, 
-                                                     "best_model/polynomial_Transformers_heads-8_embed_dim-256_inter_dim-512_best_model.h5"), 
+                                                     "best_model/best_model.h5"), 
                             custom_objects = {'TokenAndPositionEmbedding': keras_nlp.layers.TokenAndPositionEmbedding,
                                             'TransformerEncoder': keras_nlp.layers.TransformerEncoder,
                                             'TransformerDecoder': keras_nlp.layers.TransformerDecoder})
